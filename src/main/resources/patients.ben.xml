@@ -1,0 +1,13 @@
+<setup>
+    <import platforms='couchdb' />
+    <couchdb database='couchdb' name ='patients'  environment='default' />
+    <generate type='Patient' count='1000' consumer='couchdb'>
+        	<attribute name='name' type='string' />
+        	<attribute name='age' type='int' min='18' max='78' />
+            <attribute name = "district" values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda'"/>
+        	<part name='addresses' container='list' count='2'>
+               		<attribute name='state' type="string"  />
+            		<attribute name='city'  type="string" />
+            </part>
+        </generate>
+    </setup>

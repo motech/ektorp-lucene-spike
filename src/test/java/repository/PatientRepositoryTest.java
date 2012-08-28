@@ -54,6 +54,7 @@ public class PatientRepositoryTest {
         queryParams.put("patientId", "1");
         List<Patient> patients = patientRepository.find(queryParams);
 
+        assertEquals(1, patientRepository.count(queryParams));
         assertEquals(patients.size(), 1);
         assertEquals(patients.get(0), patient);
     }
@@ -99,6 +100,7 @@ public class PatientRepositoryTest {
         queryParams.put("dob<date>", "[2010-02-01 TO 2010-04-30]");
         List<Patient> patients = patientRepository.find(queryParams);
 
+        assertEquals(3, patientRepository.count(queryParams));
         assertEquals(3, patients.size());
         assertEquals(patient2, patients.get(0));
         assertEquals(patient3, patients.get(1));
@@ -106,14 +108,12 @@ public class PatientRepositoryTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Inner collection search does not seem to be working")
     public void shouldFindPatientByAddress(){
         Patient patient1 = createPatient("1", "name1", 22, LocalDate.parse("2010-01-01")).withAddresses(new Address("addr2", "street2", "city2", "state1"));
         Patient patient2 = createPatient("2", "name2", 22, LocalDate.parse("2010-02-01")).withAddresses(new Address("addr2", "street2", "city2", "state2"));
-        //Patient patient3 = createPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
         patientRepository.add(patient1);
         patientRepository.add(patient2);
-        //patientRepository.add(patient3);
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("state", "state2");

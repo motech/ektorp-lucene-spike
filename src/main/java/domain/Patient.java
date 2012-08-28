@@ -14,6 +14,7 @@ public class Patient extends CouchDbDocument {
     private String patientId;
     private String name;
     private String phoneNumber;
+    private String district;
     private LocalDate dob;
     private boolean onActiveTreatment = true;
     private Integer age;
