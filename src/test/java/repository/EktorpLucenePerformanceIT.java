@@ -6,7 +6,6 @@ import org.ektorp.CouchDbInstance;
 import org.ektorp.http.HttpClient;
 import org.ektorp.http.StdHttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,18 +35,9 @@ public class EktorpLucenePerformanceIT {
         Map<String, String> queryParams = new HashMap();
         queryParams.put("district", "Jehanabad");
         //patientRepository.add(createPatient("1", "we", 1, LocalDate.now()));
-        List<Patient> patients = patientRepository.find(queryParams);
+        List<Patient> patients = patientRepository.find(queryParams, null, null);
 
         assertTrue(patients.size() > 0);
-    }
-
-    private Patient createPatient(String patientId, String name, int age, LocalDate dob) {
-        Patient patient = new Patient();
-        patient.setName(name);
-        patient.setPatientId(patientId);
-        patient.setDob(dob);
-        patient.setAge(age);
-        return patient;
     }
 
 }

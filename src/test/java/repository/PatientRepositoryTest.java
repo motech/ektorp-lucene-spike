@@ -19,6 +19,8 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.joda.time.LocalDate.now;
 
 public class PatientRepositoryTest {
@@ -52,7 +54,7 @@ public class PatientRepositoryTest {
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("patientId", "1");
-        List<Patient> patients = patientRepository.find(queryParams);
+        List<Patient> patients = patientRepository.find(queryParams, null, null);
 
         assertEquals(1, patientRepository.count(queryParams));
         assertEquals(patients.size(), 1);
@@ -75,7 +77,7 @@ public class PatientRepositoryTest {
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("name", "name3");
-        List<Patient> patients = patientRepository.find(queryParams);
+        List<Patient> patients = patientRepository.find(queryParams, null, null);
 
         assertEquals(patients.size(), 1);
         assertEquals(patients.get(0), patient3);
@@ -98,7 +100,7 @@ public class PatientRepositoryTest {
         Map<String, String> queryParams = new HashMap();
         queryParams.put("age", "22");
         queryParams.put("dob<date>", "[2010-02-01 TO 2010-04-30]");
-        List<Patient> patients = patientRepository.find(queryParams);
+        List<Patient> patients = patientRepository.find(queryParams, null, null);
 
         assertEquals(3, patientRepository.count(queryParams));
         assertEquals(3, patients.size());
@@ -117,12 +119,48 @@ public class PatientRepositoryTest {
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("state", "state2");
-        List<Patient> patients = patientRepository.find(queryParams);
+        List<Patient> patients = patientRepository.find(queryParams, null, null);
 
         assertEquals(1, patients.size());
         assertEquals(patient2, patients.get(0));
     }
 
+    @Test
+    public void shouldApplyLimitAndSkip(){
+
+        Patient patient1 = createPatient("1", "name1", 22, LocalDate.parse("2010-01-01"));
+        Patient patient2 = createPatient("2", "name2", 22, LocalDate.parse("2010-02-01"));
+        Patient patient3 = createPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
+        Patient patient4 = createPatient("4", "name4", 22, LocalDate.parse("2010-04-01"));
+        Patient patient5 = createPatient("5", "name5", 22, LocalDate.parse("2010-05-01"));
+        Patient patient6 = createPatient("6", "name6", 22, LocalDate.parse("2010-06-01"));
+        Patient patient7 = createPatient("7", "name7", 22, LocalDate.parse("2010-07-01"));
+        Patient patient8 = createPatient("8", "name8", 22, LocalDate.parse("2010-08-01"));
+        Patient patient9 = createPatient("9", "name9", 22, LocalDate.parse("2010-09-01"));
+        Patient patient10 = createPatient("10", "name10", 22, LocalDate.parse("2010-10-01"));
+
+        patientRepository.add(patient1);
+        patientRepository.add(patient2);
+        patientRepository.add(patient3);
+        patientRepository.add(patient4);
+        patientRepository.add(patient5);
+        patientRepository.add(patient6);
+        patientRepository.add(patient7);
+        patientRepository.add(patient8);
+        patientRepository.add(patient9);
+        patientRepository.add(patient10);
+
+        Map<String, String> queryParams = new HashMap();
+        queryParams.put("age", "22");
+
+        assertEquals(10, patientRepository.count(queryParams));
+        assertEquals(3, patientRepository.find(queryParams, 3, 0).size());
+        assertEquals(3, patientRepository.find(queryParams, 3, 3).size());
+        assertEquals(3, patientRepository.find(queryParams, 3, 6).size());
+        assertEquals(1, patientRepository.find(queryParams, 3, 9).size());
+        assertThat(patientRepository.find(queryParams, 3, 9), hasItem(patient10));
+        assertEquals(5, patientRepository.find(queryParams, 5, 5).size());
+    }
 
 
     private Patient createPatient(String patientId, String name, int age, LocalDate dob) {

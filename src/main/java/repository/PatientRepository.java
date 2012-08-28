@@ -39,12 +39,12 @@ public class PatientRepository extends org.ektorp.support.CouchDbRepositorySuppo
     }
 
     public int count(Map<String, String> queryParams) {
-       CustomLuceneResult luceneResult = getLuceneResult(queryParams);
+       CustomLuceneResult luceneResult = getLuceneResult(queryParams, null, null);
        return luceneResult.getTotalRows();
     }
 
-    public List<Patient> find(Map<String, String> queryParams) {
-        CustomLuceneResult luceneResult = getLuceneResult(queryParams);
+    public List<Patient> find(Map<String, String> queryParams, Integer limit, Integer skip) {
+        CustomLuceneResult luceneResult = getLuceneResult(queryParams, limit, skip);
         List<CustomLuceneResult.Row<Patient>> resultRows = luceneResult.getRows();
 
         List<Patient> patients = new ArrayList();
@@ -55,12 +55,14 @@ public class PatientRepository extends org.ektorp.support.CouchDbRepositorySuppo
         return patients;
     }
 
-    private CustomLuceneResult getLuceneResult(Map<String, String> queryParams) {
+    private CustomLuceneResult getLuceneResult(Map<String, String> queryParams, Integer limit, Integer skip) {
         LuceneQuery query = new LuceneQuery(VIEW_NAME, SEARCH_FUNCTION);
 
         String queryString = buildQueryString(queryParams);
         query.setQuery(queryString.toString());
         query.setIncludeDocs(true);
+        query.setLimit(limit);
+        query.setSkip(skip);
         TypeReference resultDocType = new TypeReference<CustomLuceneResult<Patient>>() {};
         return ((LuceneAwareCouchDbConnector) db).queryLucene(query, resultDocType);
     }
