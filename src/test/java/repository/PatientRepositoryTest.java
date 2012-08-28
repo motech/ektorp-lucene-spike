@@ -49,8 +49,7 @@ public class PatientRepositoryTest {
 
     @Test
     public void shouldFindPatientByPatientId(){
-        Patient patient = createPatient("1", "name", 21, now());
-        patientRepository.add(patient);
+        Patient patient = addPatient("1", "name", 21, now());
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("patientId", "1");
@@ -63,17 +62,11 @@ public class PatientRepositoryTest {
 
     @Test
     public void shouldFindPatientByPatientName(){
-        Patient patient1 = createPatient("1", "name1", 11, now());
-        Patient patient2 = createPatient("2", "name2", 22, now());
-        Patient patient3 = createPatient("3", "name3", 32, now());
-        Patient patient4 = createPatient("4", "name4", 41, now());
-        Patient patient5 = createPatient("5", "name5", 58, now());
-
-        patientRepository.add(patient1);
-        patientRepository.add(patient2);
-        patientRepository.add(patient3);
-        patientRepository.add(patient4);
-        patientRepository.add(patient5);
+        addPatient("1", "name1", 11, now());
+        addPatient("2", "name2", 22, now());
+        Patient patient3 = addPatient("3", "name3", 32, now());
+        addPatient("4", "name4", 41, now());
+        addPatient("5", "name5", 58, now());
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("name", "name3");
@@ -85,17 +78,11 @@ public class PatientRepositoryTest {
 
     @Test
     public void shouldFindPatientByPatientAgeAndDateRange(){
-        Patient patient1 = createPatient("1", "name1", 22, LocalDate.parse("2010-01-01"));
-        Patient patient2 = createPatient("2", "name2", 22, LocalDate.parse("2010-02-01"));
-        Patient patient3 = createPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
-        Patient patient4 = createPatient("4", "name4", 22, LocalDate.parse("2010-04-01"));
-        Patient patient5 = createPatient("5", "name5", 22, LocalDate.parse("2010-05-01"));
-
-        patientRepository.add(patient1);
-        patientRepository.add(patient2);
-        patientRepository.add(patient3);
-        patientRepository.add(patient4);
-        patientRepository.add(patient5);
+        addPatient("1", "name1", 22, LocalDate.parse("2010-01-01"));
+        Patient patient2 = addPatient("2", "name2", 22, LocalDate.parse("2010-02-01"));
+        Patient patient3 = addPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
+        Patient patient4 = addPatient("4", "name4", 22, LocalDate.parse("2010-04-01"));
+        addPatient("5", "name5", 22, LocalDate.parse("2010-05-01"));
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("age", "22");
@@ -112,10 +99,8 @@ public class PatientRepositoryTest {
     @Test
     @Ignore("Inner collection search does not seem to be working")
     public void shouldFindPatientByAddress(){
-        Patient patient1 = createPatient("1", "name1", 22, LocalDate.parse("2010-01-01")).withAddresses(new Address("addr2", "street2", "city2", "state1"));
-        Patient patient2 = createPatient("2", "name2", 22, LocalDate.parse("2010-02-01")).withAddresses(new Address("addr2", "street2", "city2", "state2"));
-        patientRepository.add(patient1);
-        patientRepository.add(patient2);
+        Patient patient1 = addPatient("1", "name1", 22, LocalDate.parse("2010-01-01")).withAddresses(new Address("addr2", "street2", "city2", "state1"));
+        Patient patient2 = addPatient("2", "name2", 22, LocalDate.parse("2010-02-01")).withAddresses(new Address("addr2", "street2", "city2", "state2"));
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("state", "state2");
@@ -127,28 +112,16 @@ public class PatientRepositoryTest {
 
     @Test
     public void shouldApplyLimitAndSkip(){
-
-        Patient patient1 = createPatient("1", "name1", 22, LocalDate.parse("2010-01-01"));
-        Patient patient2 = createPatient("2", "name2", 22, LocalDate.parse("2010-02-01"));
-        Patient patient3 = createPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
-        Patient patient4 = createPatient("4", "name4", 22, LocalDate.parse("2010-04-01"));
-        Patient patient5 = createPatient("5", "name5", 22, LocalDate.parse("2010-05-01"));
-        Patient patient6 = createPatient("6", "name6", 22, LocalDate.parse("2010-06-01"));
-        Patient patient7 = createPatient("7", "name7", 22, LocalDate.parse("2010-07-01"));
-        Patient patient8 = createPatient("8", "name8", 22, LocalDate.parse("2010-08-01"));
-        Patient patient9 = createPatient("9", "name9", 22, LocalDate.parse("2010-09-01"));
-        Patient patient10 = createPatient("10", "name10", 22, LocalDate.parse("2010-10-01"));
-
-        patientRepository.add(patient1);
-        patientRepository.add(patient2);
-        patientRepository.add(patient3);
-        patientRepository.add(patient4);
-        patientRepository.add(patient5);
-        patientRepository.add(patient6);
-        patientRepository.add(patient7);
-        patientRepository.add(patient8);
-        patientRepository.add(patient9);
-        patientRepository.add(patient10);
+        addPatient("1", "name1", 22, LocalDate.parse("2010-01-01"));
+        addPatient("2", "name2", 22, LocalDate.parse("2010-02-01"));
+        addPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
+        addPatient("4", "name4", 22, LocalDate.parse("2010-04-01"));
+        addPatient("5", "name5", 22, LocalDate.parse("2010-05-01"));
+        addPatient("6", "name6", 22, LocalDate.parse("2010-06-01"));
+        addPatient("7", "name7", 22, LocalDate.parse("2010-07-01"));
+        addPatient("8", "name8", 22, LocalDate.parse("2010-08-01"));
+        addPatient("9", "name9", 22, LocalDate.parse("2010-09-01"));
+        Patient patient10 = addPatient("10", "name10", 22, LocalDate.parse("2010-10-01"));
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("age", "22");
@@ -162,6 +135,11 @@ public class PatientRepositoryTest {
         assertEquals(5, patientRepository.find(queryParams, 5, 5).size());
     }
 
+    private Patient addPatient(String patientId, String name, int age, LocalDate dob) {
+        Patient patient = createPatient(patientId, name, age, dob);
+        patientRepository.add(patient);
+        return patient;
+    }
 
     private Patient createPatient(String patientId, String name, int age, LocalDate dob) {
         Patient patient = new Patient();

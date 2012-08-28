@@ -15,8 +15,8 @@ import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
+//Runs on top of benerator generated data. Run as "mvn verify"
 public class EktorpLucenePerformanceIT {
-
     private LuceneAwareCouchDbConnector dbConnector;
     private PatientRepository patientRepository;
 
