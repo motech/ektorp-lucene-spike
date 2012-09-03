@@ -25,9 +25,9 @@ public class PatientRepository extends org.ektorp.support.CouchDbRepositorySuppo
                 "index.add(doc.patientId, {field: 'patientId'}); " +
 
                 "if(doc.addresses != undefined) { "+
-                "for (var address in doc.addresses) { " +
-                    "index.add(address.state, {field: 'state'}); "+
-                    "index.add(address.city, {field: 'city'}); " +
+                "for (var i=0;i<doc.addresses.length;i++) { " +
+                    "index.add(doc.addresses[i].state, {field: 'state'}); "+
+                    "index.add(doc.addresses[i].city, {field: 'city'}); " +
                 "}} "+
                 "return index;" +
             "}";

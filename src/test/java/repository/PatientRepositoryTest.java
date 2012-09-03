@@ -10,7 +10,6 @@ import org.ektorp.impl.StdCouchDbInstance;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -19,8 +18,6 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.joda.time.LocalDate.now;
 
 public class PatientRepositoryTest {
@@ -97,10 +94,12 @@ public class PatientRepositoryTest {
     }
 
     @Test
-    @Ignore("Inner collection search does not seem to be working")
     public void shouldFindPatientByAddress(){
-        Patient patient1 = addPatient("1", "name1", 22, LocalDate.parse("2010-01-01")).withAddresses(new Address("addr2", "street2", "city2", "state1"));
-        Patient patient2 = addPatient("2", "name2", 22, LocalDate.parse("2010-02-01")).withAddresses(new Address("addr2", "street2", "city2", "state2"));
+        Patient patient1 = createPatient("1", "name1", 22, LocalDate.parse("2010-01-01")).withAddresses(new Address("addr2", "street2", "city2", "state1"));
+        Patient patient2 = createPatient("2", "name2", 22, LocalDate.parse("2010-02-01")).withAddresses(new Address("addr2", "street2", "city2", "state2"));
+
+        addPatient(patient1);
+        addPatient(patient2);
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("state", "state2");
@@ -131,12 +130,16 @@ public class PatientRepositoryTest {
         assertEquals(3, patientRepository.find(queryParams, 3, 3).size());
         assertEquals(3, patientRepository.find(queryParams, 3, 6).size());
         assertEquals(1, patientRepository.find(queryParams, 3, 9).size());
-        assertThat(patientRepository.find(queryParams, 3, 9), hasItem(patient10));
+        assertEquals(patient10, patientRepository.find(queryParams, 3, 9).get(0));
         assertEquals(5, patientRepository.find(queryParams, 5, 5).size());
     }
 
     private Patient addPatient(String patientId, String name, int age, LocalDate dob) {
         Patient patient = createPatient(patientId, name, age, dob);
+        return addPatient(patient);
+    }
+
+    private Patient addPatient(Patient patient) {
         patientRepository.add(patient);
         return patient;
     }
