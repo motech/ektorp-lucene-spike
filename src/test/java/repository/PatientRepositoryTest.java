@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.joda.time.LocalDate.now;
@@ -50,7 +51,7 @@ public class PatientRepositoryTest {
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("patientId", "1");
-        List<Patient> patients = patientRepository.find(queryParams, null, null);
+        List<Patient> patients = patientRepository.find(queryParams, "", null, null);
 
         assertEquals(1, patientRepository.count(queryParams));
         assertEquals(patients.size(), 1);
@@ -67,7 +68,7 @@ public class PatientRepositoryTest {
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("name", "name3");
-        List<Patient> patients = patientRepository.find(queryParams, null, null);
+        List<Patient> patients = patientRepository.find(queryParams, "", null, null);
 
         assertEquals(patients.size(), 1);
         assertEquals(patients.get(0), patient3);
@@ -84,7 +85,7 @@ public class PatientRepositoryTest {
         Map<String, String> queryParams = new HashMap();
         queryParams.put("age", "22");
         queryParams.put("dob<date>", "[2010-02-01 TO 2010-04-30]");
-        List<Patient> patients = patientRepository.find(queryParams, null, null);
+        List<Patient> patients = patientRepository.find(queryParams, "", null, null);
 
         assertEquals(3, patientRepository.count(queryParams));
         assertEquals(3, patients.size());
@@ -103,7 +104,7 @@ public class PatientRepositoryTest {
 
         Map<String, String> queryParams = new HashMap();
         queryParams.put("state", "state2");
-        List<Patient> patients = patientRepository.find(queryParams, null, null);
+        List<Patient> patients = patientRepository.find(queryParams, "", null, null);
 
         assertEquals(1, patients.size());
         assertEquals(patient2, patients.get(0));
@@ -126,12 +127,32 @@ public class PatientRepositoryTest {
         queryParams.put("age", "22");
 
         assertEquals(10, patientRepository.count(queryParams));
-        assertEquals(3, patientRepository.find(queryParams, 3, 0).size());
-        assertEquals(3, patientRepository.find(queryParams, 3, 3).size());
-        assertEquals(3, patientRepository.find(queryParams, 3, 6).size());
-        assertEquals(1, patientRepository.find(queryParams, 3, 9).size());
-        assertEquals(patient10, patientRepository.find(queryParams, 3, 9).get(0));
-        assertEquals(5, patientRepository.find(queryParams, 5, 5).size());
+        assertEquals(3, patientRepository.find(queryParams, "", 3, 0).size());
+        assertEquals(3, patientRepository.find(queryParams, "", 3, 3).size());
+        assertEquals(3, patientRepository.find(queryParams, "", 3, 6).size());
+        assertEquals(1, patientRepository.find(queryParams, "", 3, 9).size());
+        assertEquals(patient10, patientRepository.find(queryParams, "", 3, 9).get(0));
+        assertEquals(5, patientRepository.find(queryParams, "", 5, 5).size());
+    }
+
+    @Test
+    public void shouldApplySort(){
+        Patient patient3 = addPatient("3", "name3", 22, LocalDate.parse("2010-03-01"));
+        Patient patient6 = addPatient("6", "name6", 22, LocalDate.parse("2010-06-01"));
+        Patient patient1 = addPatient("1", "name1", 22, LocalDate.parse("2010-01-01"));
+        Patient patient12 = addPatient("12", "name 12", 22, LocalDate.parse("2010-10-01"));
+        Patient patient10 = addPatient("10", "name 10", 22, LocalDate.parse("2010-10-01"));
+        Patient patient11 = addPatient("11", "name 11", 22, LocalDate.parse("2010-10-01"));
+
+        Map<String, String> queryParams = new HashMap();
+        queryParams.put("age", "22");
+
+        String sortParam = "/dob<date>,\\name<string>";
+        List<Patient> patients = patientRepository.find(queryParams, sortParam, 20, 0);
+
+        List<Patient> expectedPatientList = asList(patient1, patient3, patient6, patient12, patient11, patient10);
+
+        assertEquals(expectedPatientList, patients);
     }
 
     private Patient addPatient(String patientId, String name, int age, LocalDate dob) {

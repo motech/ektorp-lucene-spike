@@ -35,7 +35,7 @@ public class EktorpLucenePerformanceIT {
         Map<String, String> queryParams = new HashMap();
         queryParams.put("district", "Jehanabad");
         //patientRepository.add(createPatient("1", "we", 1, LocalDate.now()));
-        List<Patient> patients = patientRepository.find(queryParams, null, null);
+        List<Patient> patients = patientRepository.find(queryParams, "", null, null);
 
         assertTrue(patients.size() > 0);
     }
